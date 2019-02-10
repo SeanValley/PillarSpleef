@@ -22,7 +22,7 @@ public class PlayerListener implements Listener{
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		lobby.addPlayer(player);
+		lobby.joinPlayer(player);
 		player.sendMessage(ChatColor.GREEN + "Joined Lobby!");
 	}
 	
