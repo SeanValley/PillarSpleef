@@ -32,6 +32,8 @@ public class PillarSpleef extends JavaPlugin{
 	 * The lobby and arena spawns can be set up via commands
 	 * 
 	 * The arena will slowly fall into a pit of lava, the last person to fall in wins!
+	 * 
+	 * TODO: Enable Queue to prioritize people who have been waiting longer
 	 */
 	public void onDisable() {
 		this.log.info("PillarSpleef 1.0 has been disabled!");
@@ -75,7 +77,7 @@ public class PillarSpleef extends JavaPlugin{
 		this.lobby = new Lobby(this, startProc, stopProc, lobbyLoc, spawnCorner1, spawnCorner2, minPlayers, maxPlayers, waitSecs * 20);
 		
 		pm.registerEvents(new PlayerListener(this.lobby), this);
-		pm.registerEvents(new GameOverListener(this, this.lobby), this);
+		pm.registerEvents(new GameOverListener(this.lobby), this);
 		
 		this.log.info("PillarSpleef 1.0 has been enabled!");
 		

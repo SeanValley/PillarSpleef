@@ -66,9 +66,15 @@ public class Lobby{
 		this.gameEnd.run();
 	}
 
-	public void addPlayer(Player player) {
+	//Adds player to lobby and teleports them to the lobby location
+	public void joinPlayer(Player player) {
 		players.add(player);
 		player.teleport(lobbyLoc);
+	}
+	
+	//Adds player to lobby without teleporting them to the lobby location
+	public void addPlayer(Player player) {
+		players.add(player);
 	}
 	
 	public void removePlayer(Player player) {

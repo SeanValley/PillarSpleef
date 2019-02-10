@@ -12,11 +12,9 @@ import com.Jakeob.LobbyUtil.Lobby;
 
 public class GameOverListener implements Listener{
 	private Lobby lobby;
-	private PillarSpleef plugin;
 	
 	
-	public GameOverListener(PillarSpleef plugin, Lobby lobby) {
-		this.plugin = plugin;
+	public GameOverListener(Lobby lobby) {
 		this.lobby = lobby;
 	}
 	
@@ -36,7 +34,6 @@ public class GameOverListener implements Listener{
 	}
 	
 	private void removePlayerIfInGame(Player player) {
-		plugin.getServer().getLogger().info("Player being removed: " + player.getDisplayName());
 		if(lobby.isPlayerInGame(player)) {
 			lobby.removePlayerFromGame(player);
 			if(lobby.getPlayersInGame().size() == 1) {
@@ -54,6 +51,7 @@ public class GameOverListener implements Listener{
 			winner.teleport(lobby.getLobbyLoc());
 			winner.setHealth(20);
 			winner.setFoodLevel(20);
+			winner.setFireTicks(0);
 			winner.sendMessage(ChatColor.GREEN + "You win! Congratulations!");
 			
 			for(Player p : this.lobby.getPlayers()) {
