@@ -1,0 +1,20 @@
+Lobby:
+  World: world
+  X: -20
+  Y: 5
+  Z: -20
+SpawnCorner1:
+  World: world
+  X: 1
+  Y: 30
+  Z: 1
+SpawnCorner2:
+  World: world
+  X: 24
+  Y: 30
+  Z: 24
+ArenaSize: 25
+ArenaHeight: 15
+MinPlayers: 1
+MaxPlayers: 20
+WaitSecs: 20

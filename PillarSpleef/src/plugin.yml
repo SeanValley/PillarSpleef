@@ -1,0 +1,7 @@
+name: PillarSpleef
+main: com.Jakeob.PillarSpleef.PillarSpleef
+version: 1.0
+commands:
+   spleef:
+      description: lobby, reset, generate, setlobby, setspawncorner1, setspawncorner2
+      usage: Usage /<command> [arg]
