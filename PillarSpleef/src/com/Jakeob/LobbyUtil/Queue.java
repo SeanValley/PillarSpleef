@@ -29,18 +29,15 @@ public class Queue extends BukkitRunnable{
 			
 			if(livePlayers.size() >= this.lobby.getMinPlayers()) {
 				if(livePlayers.size() <= this.lobby.getMaxPlayers()) {
-					for(Player player : livePlayers) {
-						Helper.spawnPlayer(player, lobby.getSpawnCorner1(), lobby.getSpawnCorner2());
-						player.sendMessage(ChatColor.GREEN + "Game started, good luck!");
-						this.lobby.addPlayerToGame(player);
-					}
+					this.lobby.spawnPlayers(livePlayers);
 				}else {
 					//Spawn players up to the max players
+					ArrayList<Player> tempPlayers = new ArrayList<Player>();
 					for(int i=0;i<this.lobby.getMaxPlayers();i++) {
-						Helper.spawnPlayer(livePlayers.get(i), this.lobby.getSpawnCorner1(), this.lobby.getSpawnCorner2());
-						livePlayers.get(i).sendMessage(ChatColor.GREEN + "Game started, good luck!");
-						this.lobby.addPlayerToGame(livePlayers.get(i));
+						tempPlayers.add(livePlayers.get(i));
 					}
+					
+					this.lobby.spawnPlayers(tempPlayers);
 					
 					//Move players up in the queue
 					@SuppressWarnings("unchecked")

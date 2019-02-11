@@ -1,5 +1,6 @@
 package com.Jakeob.PillarSpleef;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -11,6 +12,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.Jakeob.LobbyUtil.Lobby;
+import com.Jakeob.LobbyUtil.Spawn;
+import com.Jakeob.PillarSpleef.GameProcedures.SpawnPlayerProcedure;
 import com.Jakeob.PillarSpleef.GameProcedures.StartProcedure;
 import com.Jakeob.PillarSpleef.GameProcedures.StopProcedure;
 
@@ -69,12 +72,19 @@ public class PillarSpleef extends JavaPlugin{
 		int waitSecs = this.getConfig().getInt("WaitSecs");
 		
 		Location lobbyLoc = new Location(this.getServer().getWorld(lobbyWorld), lobbyX, lobbyY, lobbyZ);
-		Location spawnCorner1 = new Location(this.getServer().getWorld(sc1World), sc1X, sc1Y, sc1Z);
-		Location spawnCorner2 = new Location(this.getServer().getWorld(sc2World), sc2X, sc2Y, sc2Z);
 		this.arena = new Arena(this, arenaSize, arenaHeight);
+		
 		StartProcedure startProc = new StartProcedure(arena);
 		StopProcedure stopProc = new StopProcedure(arena);
-		this.lobby = new Lobby(this, startProc, stopProc, lobbyLoc, spawnCorner1, spawnCorner2, minPlayers, maxPlayers, waitSecs * 20);
+		SpawnPlayerProcedure spawnProc = new SpawnPlayerProcedure();
+		
+		ArrayList<Spawn> spawns = new ArrayList<Spawn>();
+		Location spawnCorner1 = new Location(this.getServer().getWorld(sc1World), sc1X, sc1Y, sc1Z);
+		Location spawnCorner2 = new Location(this.getServer().getWorld(sc2World), sc2X, sc2Y, sc2Z);
+		Spawn spawn = new Spawn(spawnCorner1, spawnCorner2);
+		spawns.add(spawn);
+		
+		this.lobby = new Lobby(this, startProc, stopProc, spawnProc, lobbyLoc, spawns, minPlayers, maxPlayers, waitSecs * 20);
 		
 		pm.registerEvents(new PlayerListener(this.lobby), this);
 		pm.registerEvents(new GameOverListener(this.lobby), this);

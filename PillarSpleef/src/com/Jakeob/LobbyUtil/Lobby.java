@@ -29,17 +29,17 @@ public class Lobby{
 	private ArrayList<Player> playersInGame;
 	
 	private GameProcedure gameEnd;
+	private SpawnProcedure spawnPlayers;
 	
 	private Location lobbyLoc;
-	private Location spawnCorner1;
-	private Location spawnCorner2;
+	private ArrayList<Spawn> spawns;
 	
 	private int minPlayers;
 	private int maxPlayers;
 	private int queueWait;
 	private boolean gameOpen;
 	
-	public Lobby(JavaPlugin plugin, GameProcedure gameStart, GameProcedure gameEnd, Location lobbyLoc, Location spawnCorner1, Location spawnCorner2, int minPlayers, int maxPlayers, int queueWait) {
+	public Lobby(JavaPlugin plugin, GameProcedure gameStart, GameProcedure gameEnd, SpawnProcedure spawnPlayers, Location lobbyLoc, ArrayList<Spawn> spawns, int minPlayers, int maxPlayers, int queueWait) {
 		this.plugin = plugin;
 		this.queue = new Queue(this, gameStart);
 		
@@ -47,10 +47,11 @@ public class Lobby{
 		this.playersInGame = new ArrayList<Player>();
 		
 		this.gameEnd = gameEnd;
+		this.spawnPlayers = spawnPlayers;
+		this.spawnPlayers.setLobby(this);
 		
 		this.lobbyLoc = lobbyLoc;
-		this.spawnCorner1 = spawnCorner1;
-		this.spawnCorner2 = spawnCorner2;
+		this.spawns = spawns;
 		
 		this.minPlayers = minPlayers;
 		this.maxPlayers = maxPlayers;
@@ -64,6 +65,14 @@ public class Lobby{
 		this.gameOpen = true;
 		this.playersInGame.clear();
 		this.gameEnd.run();
+	}
+	
+	public void spawnPlayers(ArrayList<Player> players) {
+		this.spawnPlayers.run(players);
+		
+		for(Player player : players) {
+			this.addPlayerToGame(player);
+		}
 	}
 
 	//Adds player to lobby and teleports them to the lobby location
@@ -133,12 +142,12 @@ public class Lobby{
 		return this.lobbyLoc;
 	}
 	
-	public Location getSpawnCorner1() {
-		return this.spawnCorner1;
-	}
-	
-	public Location getSpawnCorner2() {
-		return this.spawnCorner2;
+	public Spawn getSpawn(int num) {
+		if(this.spawns.size() >= num) {
+			return this.spawns.get(num);
+		}else {
+			return null;
+		}
 	}
 	
 	private void init() {
