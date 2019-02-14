@@ -15,6 +15,7 @@ public class SpawnPlayerProcedure implements SpawnProcedure{
 	public void run(ArrayList<Player> players) {
 		for(Player player : players) {
 			Helper.spawnPlayer(player, lobby.getSpawn(0).getSpawnCorner1(), lobby.getSpawn(0).getSpawnCorner2());
+			player.getInventory().clear();
 		}
 	}
 	

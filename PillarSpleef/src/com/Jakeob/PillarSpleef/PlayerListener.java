@@ -13,9 +13,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import com.Jakeob.LobbyUtil.Lobby;
 
 public class PlayerListener implements Listener{
+	private PillarSpleef plugin;
 	private Lobby lobby;
 	
-	public PlayerListener(Lobby lobby) {
+	public PlayerListener(PillarSpleef plugin, Lobby lobby) {
+		this.plugin = plugin;
 		this.lobby = lobby;
 	}
 	
@@ -24,6 +26,11 @@ public class PlayerListener implements Listener{
 		Player player = event.getPlayer();
 		lobby.joinPlayer(player);
 		player.sendMessage(ChatColor.GREEN + "Joined Lobby!");
+		
+		//TODO: Check if they're in config or not already, if not: add them with 0 score
+		if(!plugin.isPlayerInConfig(player)) {
+			plugin.setPlayerPoints(player, 0);
+		}
 	}
 	
 	@EventHandler

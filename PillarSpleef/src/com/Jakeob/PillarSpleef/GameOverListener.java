@@ -1,6 +1,7 @@
 package com.Jakeob.PillarSpleef;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,25 +12,54 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.Jakeob.LobbyUtil.Lobby;
 
 public class GameOverListener implements Listener{
+	private PillarSpleef plugin;
 	private Lobby lobby;
 	
 	
-	public GameOverListener(Lobby lobby) {
+	public GameOverListener(PillarSpleef plugin, Lobby lobby) {
+		this.plugin = plugin;
 		this.lobby = lobby;
 	}
 	
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
+		boolean wasInGame = lobby.isPlayerInGame(event.getEntity());
+		if(wasInGame) {
+			for(Player p : lobby.getPlayersInGame()) {
+				if(!p.equals(event.getEntity())) {
+					plugin.incrementPlayerPoints(p);
+				}
+			}
+		}
+		
 		removePlayerIfInGame(event.getEntity());
 	}
 	
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
+		boolean wasInGame = lobby.isPlayerInGame(event.getPlayer());
+		if(wasInGame) {
+			for(Player p : lobby.getPlayersInGame()) {
+				if(!p.equals(event.getPlayer())) {
+					plugin.incrementPlayerPoints(p);
+				}
+			}
+		}
+		
 		removePlayerIfInGame(event.getPlayer());
 	}
 	
 	@EventHandler
 	public void onPlayerKicked(PlayerKickEvent event) {
+		boolean wasInGame = lobby.isPlayerInGame(event.getPlayer());
+		if(wasInGame) {
+			for(Player p : lobby.getPlayersInGame()) {
+				if(!p.equals(event.getPlayer())) {
+					plugin.incrementPlayerPoints(p);
+				}
+			}
+		}
+		
 		removePlayerIfInGame(event.getPlayer());
 	}
 	
@@ -53,6 +83,7 @@ public class GameOverListener implements Listener{
 			winner.setFoodLevel(20);
 			winner.setFireTicks(0);
 			winner.sendMessage(ChatColor.GREEN + "You win! Congratulations!");
+			lobby.getLobbyLoc().getWorld().playSound(lobby.getLobbyLoc(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 			
 			for(Player p : this.lobby.getPlayers()) {
 				p.sendMessage(ChatColor.YELLOW + winnerName + " has won the game!");

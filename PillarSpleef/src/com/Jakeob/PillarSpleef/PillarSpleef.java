@@ -1,6 +1,7 @@
 package com.Jakeob.PillarSpleef;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -36,12 +37,12 @@ public class PillarSpleef extends JavaPlugin{
 	 * 
 	 * The arena will slowly fall into a pit of lava, the last person to fall in wins!
 	 * 
-	 * TODO: Enable Queue to prioritize people who have been waiting longer
+	 * TODO: Keep track of players' total points
 	 */
 	public void onDisable() {
 		this.log.info("PillarSpleef 1.0 has been disabled!");
 	}
-	  
+	
 	public void onEnable() {
 		log = Logger.getLogger("Minecraft");
 		PluginManager pm = this.getServer().getPluginManager();
@@ -86,8 +87,15 @@ public class PillarSpleef extends JavaPlugin{
 		
 		this.lobby = new Lobby(this, startProc, stopProc, spawnProc, lobbyLoc, spawns, minPlayers, maxPlayers, waitSecs * 20);
 		
-		pm.registerEvents(new PlayerListener(this.lobby), this);
-		pm.registerEvents(new GameOverListener(this.lobby), this);
+		pm.registerEvents(new PlayerListener(this, this.lobby), this);
+		pm.registerEvents(new GameOverListener(this, this.lobby), this);
+		pm.registerEvents(new ChatHandler(this), this);
+		
+		Collection<? extends Player> onlinePlayers = this.getServer().getOnlinePlayers();
+		for(Player player : onlinePlayers) {
+			lobby.joinPlayer(player);
+			player.sendMessage(ChatColor.GREEN + "Joined Lobby!");
+		}
 		
 		this.log.info("PillarSpleef 1.0 has been enabled!");
 		
@@ -102,8 +110,18 @@ public class PillarSpleef extends JavaPlugin{
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("spleef")) {
-			if(args[0].equals("reset")) {
+		if (cmd.getName().equalsIgnoreCase("spleef") && args[0].equalsIgnoreCase("list") && sender instanceof Player) {
+			((Player)sender).sendMessage("In Lobby:");
+			for(Player p : this.lobby.getPlayers()) {
+				((Player)sender).sendMessage("  " + p.getDisplayName());
+			}
+			((Player)sender).sendMessage("In Game:");
+			for(Player p : this.lobby.getPlayersInGame()) {
+				((Player)sender).sendMessage("  " + p.getDisplayName());
+			}
+			return true;
+		}
+/*			if(args[0].equals("reset")) {
 				arena.stopSpleef();
 				arena.resetArena();
 				lobby.setGameOpen(true);
@@ -151,7 +169,28 @@ public class PillarSpleef extends JavaPlugin{
 				}
 				return true;
 			}
-		}
+		}*/
 		return false;
+	}
+	
+	public boolean isPlayerInConfig(Player player) {
+		String id = player.getUniqueId().toString();
+		return this.getConfig().contains("Players." + id);
+	}
+	
+	public int getPlayerPoints(Player player) {
+		String id = player.getUniqueId().toString();
+		return this.getConfig().getInt("Players." + id);
+	}
+	
+	public void setPlayerPoints(Player player, int points) {
+		String id = player.getUniqueId().toString();
+		this.getConfig().set("Players." + id, points);
+		this.saveConfig();
+	}
+	
+	public void incrementPlayerPoints(Player player) {
+		int newPoints = getPlayerPoints(player) + 1;
+		setPlayerPoints(player, newPoints);
 	}
 }
