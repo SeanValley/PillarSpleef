@@ -28,6 +28,7 @@ public class GameOverListener implements Listener{
 			for(Player p : lobby.getPlayersInGame()) {
 				if(!p.equals(event.getEntity())) {
 					plugin.incrementPlayerPoints(p);
+					PillarSpleef.addMysteryDust(p, 1);
 				}
 			}
 		}
@@ -42,6 +43,7 @@ public class GameOverListener implements Listener{
 			for(Player p : lobby.getPlayersInGame()) {
 				if(!p.equals(event.getPlayer())) {
 					plugin.incrementPlayerPoints(p);
+					PillarSpleef.addMysteryDust(p, 1);
 				}
 			}
 		}
@@ -56,6 +58,7 @@ public class GameOverListener implements Listener{
 			for(Player p : lobby.getPlayersInGame()) {
 				if(!p.equals(event.getPlayer())) {
 					plugin.incrementPlayerPoints(p);
+					PillarSpleef.addMysteryDust(p, 1);
 				}
 			}
 		}

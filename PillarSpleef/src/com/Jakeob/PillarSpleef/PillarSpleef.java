@@ -17,6 +17,8 @@ import com.Jakeob.LobbyUtil.Spawn;
 import com.Jakeob.PillarSpleef.GameProcedures.SpawnPlayerProcedure;
 import com.Jakeob.PillarSpleef.GameProcedures.StartProcedure;
 import com.Jakeob.PillarSpleef.GameProcedures.StopProcedure;
+import com.yapzhenyie.GadgetsMenu.api.GadgetsMenuAPI;
+import com.yapzhenyie.GadgetsMenu.player.PlayerManager;
 
 public class PillarSpleef extends JavaPlugin{
 	public Logger log;
@@ -29,18 +31,9 @@ public class PillarSpleef extends JavaPlugin{
 	 * Pillar Spleef 1.0
 	 * By: Sean Valley
 	 * Email: valleydsean@gmail.com
-	 * 
-	 * Bukkit plugin that runs a minigame
-	 * Players are put into a lobby upon joining & put into a game when one opens
-	 * The arena is configurable in the settings
-	 * The lobby and arena spawns can be set up via commands
-	 * 
-	 * The arena will slowly fall into a pit of lava, the last person to fall in wins!
-	 * 
-	 * TODO: Keep track of players' total points
 	 */
 	public void onDisable() {
-		this.log.info("PillarSpleef 1.0 has been disabled!");
+		this.log.info("PillarSpleef 1.1 has been disabled!");
 	}
 	
 	public void onEnable() {
@@ -89,7 +82,6 @@ public class PillarSpleef extends JavaPlugin{
 		
 		pm.registerEvents(new PlayerListener(this, this.lobby), this);
 		pm.registerEvents(new GameOverListener(this, this.lobby), this);
-		pm.registerEvents(new ChatHandler(this), this);
 		
 		Collection<? extends Player> onlinePlayers = this.getServer().getOnlinePlayers();
 		for(Player player : onlinePlayers) {
@@ -97,13 +89,13 @@ public class PillarSpleef extends JavaPlugin{
 			player.sendMessage(ChatColor.GREEN + "Joined Lobby!");
 		}
 		
-		this.log.info("PillarSpleef 1.0 has been enabled!");
+		this.log.info("PillarSpleef 1.1 has been enabled!");
 		
 		this.arena.resetArena();
 	}
 	  
 	public void loadConfiguration() {
-		this.getConfig().options().header("###############################################\nPillarSpleef 1.0\nFor Bukkit Build 1.13.2 R0.1\nBy: Sean Valley\n###############################################\n");
+		this.getConfig().options().header("###############################################\nPillarSpleef 1.1\nFor Bukkit Build 1.13.2 R0.1\nBy: Sean Valley\n###############################################\n");
 	    
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
@@ -121,55 +113,6 @@ public class PillarSpleef extends JavaPlugin{
 			}
 			return true;
 		}
-/*			if(args[0].equals("reset")) {
-				arena.stopSpleef();
-				arena.resetArena();
-				lobby.setGameOpen(true);
-				((Player)sender).sendMessage(ChatColor.GREEN + "Spleef Reset!");
-				return true;
-			}else if(args[0].equals("generate")) {
-				arena.generateArena();
-				((Player)sender).sendMessage(ChatColor.GREEN + "Arena Generated!");
-				return true;
-			}else if(args[0].equals("setlobby") && sender instanceof Player) {
-				Location loc = ((Player)sender).getLocation();
-				this.getConfig().set("Lobby.World", loc.getWorld().getName());
-				this.getConfig().set("Lobby.X", loc.getBlockX());
-				this.getConfig().set("Lobby.Y", loc.getBlockY());
-				this.getConfig().set("Lobby.Z", loc.getBlockZ());
-				this.saveConfig();
-				((Player)sender).sendMessage(ChatColor.GREEN + "Lobby Location Updated!");
-				return true;
-			}else if(args[0].equals("setspawncorner1") && sender instanceof Player) {
-				Location loc = ((Player)sender).getLocation();
-				this.getConfig().set("SpawnCorner1.World", loc.getWorld().getName());
-				this.getConfig().set("SpawnCorner1.X", loc.getBlockX());
-				this.getConfig().set("SpawnCorner1.Y", loc.getBlockY());
-				this.getConfig().set("SpawnCorner1.Z", loc.getBlockZ());
-				this.saveConfig();
-				((Player)sender).sendMessage(ChatColor.GREEN + "SC1 Location Updated!");
-				return true;
-			}else if(args[0].equals("setspawncorner2") && sender instanceof Player) {
-				Location loc = ((Player)sender).getLocation();
-				this.getConfig().set("SpawnCorner2.World", loc.getWorld().getName());
-				this.getConfig().set("SpawnCorner2.X", loc.getBlockX());
-				this.getConfig().set("SpawnCorner2.Y", loc.getBlockY());
-				this.getConfig().set("SpawnCorner2.Z", loc.getBlockZ());
-				this.saveConfig();
-				((Player)sender).sendMessage(ChatColor.GREEN + "SC2 Location Updated!");
-				return true;
-			}else if(args[0].equals("list") && sender instanceof Player) {
-				((Player)sender).sendMessage("In Lobby:");
-				for(Player p : this.lobby.getPlayers()) {
-					((Player)sender).sendMessage("  " + p.getDisplayName());
-				}
-				((Player)sender).sendMessage("In Game:");
-				for(Player p : this.lobby.getPlayersInGame()) {
-					((Player)sender).sendMessage("  " + p.getDisplayName());
-				}
-				return true;
-			}
-		}*/
 		return false;
 	}
 	
@@ -192,5 +135,10 @@ public class PillarSpleef extends JavaPlugin{
 	public void incrementPlayerPoints(Player player) {
 		int newPoints = getPlayerPoints(player) + 1;
 		setPlayerPoints(player, newPoints);
+	}
+	
+	public static void addMysteryDust(Player player, int amount) {
+	    PlayerManager playerManager = GadgetsMenuAPI.getPlayerManager(player);
+	    playerManager.addMysteryDust(1);
 	}
 }
